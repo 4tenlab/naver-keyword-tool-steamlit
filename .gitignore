@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# PyInstaller 빌드 폴더 및 임시 파일
+build/
+dist/
+
+# 로컬 개발 환경 설정
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE 설정 파일
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 로그 파일
+*.log
+
+# 엑셀 출력 파일
+*.xlsx
+*.xls
+
+# 설정 파일
+*.ini
+config.json 
