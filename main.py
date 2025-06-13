@@ -13,21 +13,24 @@ from pathlib import Path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-# 로깅 설정
+# 로깅 설정 (Streamlit Cloud 환경 고려)
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('logs/app.log', encoding='utf-8'),
-        logging.StreamHandler()
+        logging.StreamHandler()  # 콘솔 로깅만 사용
     ]
 )
 
 def main():
     """메인 실행 함수"""
     try:
-        # logs 디렉토리 생성
-        os.makedirs('logs', exist_ok=True)
+        # logs 디렉토리 생성 (로컬 환경용)
+        try:
+            os.makedirs('logs', exist_ok=True)
+        except (OSError, PermissionError):
+            # Streamlit Cloud 등에서 디렉토리 생성이 안 될 경우 무시
+            pass
         
         # Streamlit 서버 실행
         import subprocess
