@@ -55,6 +55,31 @@ cd naver-keyword-tool-steamlit
 2. 관리 도구 > API 관리 > 비밀키 발급 및 관리
 3. API 키와 Secret 키 생성 후 사용
 
+### 🔐 안전한 API 키 관리 (Streamlit Secrets)
+
+**Public 저장소에서는 API 키를 코드에 하드코딩하면 안 됩니다!**
+
+#### 로컬 개발용
+프로젝트 루트에 `.streamlit/secrets.toml` 파일을 생성하고 실제 API 키를 입력하세요:
+```toml
+[api]
+CUSTOMER_ID = "your_actual_customer_id"
+API_KEY = "your_actual_api_key"
+SECRET_KEY = "your_actual_secret_key"
+```
+
+#### Streamlit Cloud 배포용
+1. Streamlit Cloud에서 **"Manage app"** → **"Settings"** → **"Secrets"** 탭 접속
+2. 아래 내용을 입력:
+```toml
+[api]
+CUSTOMER_ID = "your_actual_customer_id"
+API_KEY = "your_actual_api_key"
+SECRET_KEY = "your_actual_secret_key"
+```
+
+> **참고**: `.streamlit/secrets.toml` 파일은 `.gitignore`에 포함되어 Git에 업로드되지 않습니다.
+
 ## ✨ v0.0.5 주요 개선사항
 
 > **본 버전은 Streamlit 기반 웹 대시보드 버전입니다.**

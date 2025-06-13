@@ -493,7 +493,26 @@ def create_left_panel():
     if 'config_manager' not in st.session_state:
         st.session_state.config_manager = ConfigManager()
     
-    credentials = st.session_state.config_manager.get_api_credentials()
+    # Streamlit Secrets에서 API 키 가져오기 (우선순위)
+    try:
+        secrets_credentials = {
+            'customer_id': st.secrets["api"]["CUSTOMER_ID"],
+            'api_key': st.secrets["api"]["API_KEY"],
+            'secret_key': st.secrets["api"]["SECRET_KEY"]
+        }
+        # secrets에 실제 값이 있는지 확인 (placeholder 값이 아닌지)
+        if all(val and val != "your_customer_id_here" and val != "your_api_key_here" and val != "your_secret_key_here" 
+               for val in secrets_credentials.values()):
+            credentials = secrets_credentials
+            use_secrets = True
+        else:
+            # 설정 관리자에서 저장된 인증 정보 가져오기 (fallback)
+            credentials = st.session_state.config_manager.get_api_credentials()
+            use_secrets = False
+    except (KeyError, AttributeError):
+        # Secrets가 없으면 설정 관리자에서 가져오기
+        credentials = st.session_state.config_manager.get_api_credentials()
+        use_secrets = False
     
     # 제목과 설명 - shadcn/ui 스타일
     st.markdown("""
@@ -518,24 +537,58 @@ def create_left_panel():
         # 숨겨진 submit 버튼 (엔터키용)
         form_submitted = st.form_submit_button("검색", type="primary", use_container_width=True)
     
-    # API 인증 정보
-    customer_id = st.text_input(
-        "CUSTOMER_ID",
-        value=credentials.get('customer_id', ''),
-        type="password"
-    )
-    
-    api_key = st.text_input(
-        "API_KEY",
-        value=credentials.get('api_key', ''),
-        type="password"
-    )
-    
-    secret_key = st.text_input(
-        "SECRET_KEY",
-        value=credentials.get('secret_key', ''),
-        type="password"
-    )
+    # API 인증 정보 표시
+    if use_secrets and credentials.get('customer_id'):
+        # Secrets에서 불러온 경우 안전하게 표시
+        st.success("🔐 Streamlit Secrets에서 API 키를 자동으로 불러왔습니다.")
+        
+        st.text_input(
+            "CUSTOMER_ID",
+            value="*" * 8 + credentials['customer_id'][-4:] if len(credentials['customer_id']) > 4 else "****",
+            disabled=True,
+            help="Streamlit Secrets에서 자동으로 불러온 값입니다."
+        )
+        customer_id = credentials['customer_id']
+        
+        st.text_input(
+            "API_KEY",
+            value="*" * 20 + "...",
+            disabled=True,
+            help="Streamlit Secrets에서 자동으로 불러온 값입니다."
+        )
+        api_key = credentials['api_key']
+        
+        st.text_input(
+            "SECRET_KEY",
+            value="*" * 20 + "...",
+            disabled=True,
+            help="Streamlit Secrets에서 자동으로 불러온 값입니다."
+        )
+        secret_key = credentials['secret_key']
+    else:
+        # 수동 입력 모드
+        st.info("💡 API 키를 직접 입력하거나 Streamlit Secrets를 설정하세요.")
+        
+        customer_id = st.text_input(
+            "CUSTOMER_ID",
+            value=credentials.get('customer_id', ''),
+            type="password",
+            help="네이버 검색광고 고객 ID를 입력하세요."
+        )
+        
+        api_key = st.text_input(
+            "API_KEY",
+            value=credentials.get('api_key', ''),
+            type="password",
+            help="네이버 검색광고 API 키를 입력하세요."
+        )
+        
+        secret_key = st.text_input(
+            "SECRET_KEY",
+            value=credentials.get('secret_key', ''),
+            type="password",
+            help="네이버 검색광고 시크릿 키를 입력하세요."
+        )
     
     # 버튼 영역
     col1, col2 = st.columns(2)
