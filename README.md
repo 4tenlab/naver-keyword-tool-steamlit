@@ -1,66 +1,56 @@
-# 네이버 키워드 도구 (naver-keyword-tool-steamlit) v0.0.5 – Streamlit Edition
+# 네이버 키워드 도구 v0.0.5 - Streamlit Edition
 
-> **이 저장소는 네이버 키워드 도구의 Streamlit(steamlit) 기반 v0.0.5 공식 버전입니다.**
-> - Repository: naver-keyword-tool-steamlit
-> - PC 16:9 환경에 최적화된 웹 대시보드 버전
-> - 네이버 브랜드 그린 컬러 적용
+> **네이버 검색광고 API를 활용한 키워드 분석 웹 애플리케이션**
+> - 🎯 연관 키워드 자동 분석
+> - 📊 검색량 데이터 시각화  
+> - 💾 Excel 다운로드 지원
+> - 🔒 보안 강화된 API 키 관리
 
-네이버 검색광고 API를 활용한 키워드 분석 도구입니다. PC 16:9 비율에 최적화된 대시보드 형태의 웹 인터페이스를 제공하며, 모듈화된 구조로 개선되었습니다.
+## 🚀 빠른 시작
 
-## 🚀 주요 기능
-
-- **키워드 및 연관 키워드 검색량 조회**
-- **검색어 트렌드 그래프 시각화**
-- **검색 결과 엑셀/CSV 파일로 저장**
-- **API 설정 저장 및 불러오기**
-- **키워드 검색 기록 관리**
-- **직관적인 대시보드 UI (2:4:4 비율)**
-
-## 📦 설치 및 실행 방법
-
-### 1. GitHub 저장소 클론
+### 1. 로컬 실행
 
 ```bash
+# 저장소 클론
 git clone https://github.com/4tenlab/naver-keyword-tool-steamlit.git
 cd naver-keyword-tool-steamlit
+
+# 의존성 설치
+pip install -r requirements.txt
+
+# 앱 실행
+streamlit run src/ui/streamlit_app.py
 ```
 
-### 2. 웹 대시보드 실행 (권장)
+브라우저에서 `http://localhost:8501` 접속
 
-1. Python 3.8 이상 설치
-2. 필요 라이브러리 설치:
-   ```bash
-   pip install -r requirements.txt
+### 2. Streamlit Cloud 배포
+
+1. **GitHub 저장소 연결**
+   - Repository: `4tenlab/naver-keyword-tool-steamlit`
+   - Branch: `main`
+   - Main file path: `streamlit_app.py` (또는 비워두기)
+
+2. **API 키 설정** (Settings → Secrets)
+   ```toml
+   [api]
+   CUSTOMER_ID = "your_actual_customer_id"
+   API_KEY = "your_actual_api_key"
+   SECRET_KEY = "your_actual_secret_key"
    ```
-3. 대시보드 실행:
-   ```bash
-   python main.py
-   ```
-   또는 직접 Streamlit 실행:
-   ```bash
-   streamlit run src/ui/dashboard_app.py
-   ```
-4. 웹 브라우저에서 http://localhost:8501 접속
 
 ## 🔑 네이버 API 설정
 
-프로그램 실행을 위해 네이버 검색광고 API 정보가 필요합니다:
-- **CUSTOMER_ID**: 네이버 광고 계정 ID
-- **API_KEY**: 발급받은 API 키
-- **SECRET_KEY**: 발급받은 비밀키
-
 ### API 키 발급 방법
 
-1. 네이버 검색광고 사이트(https://searchad.naver.com/)에 로그인
-2. 관리 도구 > API 관리 > 비밀키 발급 및 관리
-3. API 키와 Secret 키 생성 후 사용
+1. [네이버 검색광고](https://searchad.naver.com/) 로그인
+2. **관리 도구** → **API 관리** → **비밀키 발급 및 관리**
+3. API 키와 Secret 키 생성
 
-### 🔐 안전한 API 키 관리 (Streamlit Secrets)
-
-**Public 저장소에서는 API 키를 코드에 하드코딩하면 안 됩니다!**
+### 🔐 보안 강화된 API 키 관리
 
 #### 로컬 개발용
-프로젝트 루트에 `.streamlit/secrets.toml` 파일을 생성하고 실제 API 키를 입력하세요:
+`.streamlit/secrets.toml` 파일 생성:
 ```toml
 [api]
 CUSTOMER_ID = "your_actual_customer_id"
@@ -68,122 +58,194 @@ API_KEY = "your_actual_api_key"
 SECRET_KEY = "your_actual_secret_key"
 ```
 
-#### Streamlit Cloud 배포용
-1. Streamlit Cloud에서 **"Manage app"** → **"Settings"** → **"Secrets"** 탭 접속
-2. 아래 내용을 입력:
-```toml
-[api]
-CUSTOMER_ID = "your_actual_customer_id"
-API_KEY = "your_actual_api_key"
-SECRET_KEY = "your_actual_secret_key"
-```
+#### 프로덕션 배포용
+- **Streamlit Cloud**: Settings → Secrets에서 설정
+- **환경변수**: `NAVER_CUSTOMER_ID`, `NAVER_API_KEY`, `NAVER_SECRET_KEY`
+- **로컬 파일**: 자동 암호화 저장 (Base64)
 
-> **참고**: `.streamlit/secrets.toml` 파일은 `.gitignore`에 포함되어 Git에 업로드되지 않습니다.
+> **보안 특징**: API 키는 암호화되어 저장되며, 민감한 정보는 Git에 업로드되지 않습니다.
 
-## ✨ v0.0.5 주요 개선사항
+## ✨ 주요 기능
 
-> **본 버전은 Streamlit 기반 웹 대시보드 버전입니다.**
-> - shadcn/ui 디자인 시스템 적용
-> - 네이버 브랜드 그린 컬러 적용
+### 🎯 키워드 분석
+- **연관 키워드 자동 추출**: 메인 키워드 기반 관련 키워드 발견
+- **검색량 데이터**: PC/모바일별 월간 검색량 조회
+- **경쟁도 분석**: 키워드별 광고 경쟁 정도 분석
 
-### 1. **shadcn/ui 디자인 시스템**
-   - 모던하고 세련된 UI 컴포넌트
-   - HSL 색상 팔레트 기반 일관된 테마
-   - 부드러운 그림자와 테두리, 향상된 타이포그래피
+### 📊 데이터 시각화
+- **인터랙티브 차트**: Plotly 기반 동적 차트
+- **상위 키워드 분석**: 검색량 기준 TOP 10 시각화
+- **경쟁도 분포**: 키워드별 경쟁 정도 분석
 
-### 2. **모듈화된 구조**
-   - API 통신, 데이터 처리, 시각화 기능을 별도 모듈로 분리
-   - 코드 재사용성과 유지보수성 향상
-   - 단일 책임 원칙 적용
+### 💾 데이터 내보내기
+- **Excel 다운로드**: 분석 결과를 Excel 파일로 저장
+- **스타일링 적용**: 네이버 브랜드 컬러로 포맷팅
+- **즉시 다운로드**: 원클릭 파일 저장
 
-### 3. **PC 16:9 비율 최적화 대시보드**
-   - 왼쪽(2): 키워드 입력 및 API 설정 패널
-   - 오른쪽 상단(4): 연관 키워드 분석 결과 테이블
-   - 오른쪽 하단(4): 키워드별 검색량 차트
+### 🎨 사용자 경험
+- **2:8 레이아웃**: 입력(20%) + 결과(80%) 최적 비율
+- **네이버 브랜드 디자인**: 일관된 그린 컬러 테마
+- **반응형 UI**: 다양한 화면 크기 지원
 
-### 4. **강화된 에러 처리**
-   - 네트워크, 인증, HTTP 오류 등 상세한 예외 처리
-   - API 요청 재시도 로직 구현
-   - 사용자 친화적 오류 메시지
-
-### 5. **환경변수 지원**
-   - API 키를 환경변수로 안전하게 관리 가능
-   - 설정 파일과 환경변수 우선순위 지원
-
-## 🌐 웹 배포 방법
-
-### Streamlit Community Cloud 배포
-
-1. GitHub에 코드를 푸시합니다.
-2. [Streamlit Community Cloud](https://streamlit.io/cloud)에 가입합니다.
-3. GitHub 저장소를 연결하고 배포합니다.
-   - Repository: `4tenlab/naver-keyword-tool-steamlit`
-   - Branch: `main`
-   - Main file path: `main.py`
-
-### Heroku 배포
-
-1. Heroku CLI 설치 후 로그인:
-   ```bash
-   heroku login
-   ```
-2. 앱 배포:
-   ```bash
-   git init
-   heroku create naver-keyword-tool
-   git add .
-   git commit -m "Initial commit"
-   git push heroku main
-   ```
-
-## 📁 프로젝트 구조
+## 🏗️ 프로젝트 구조
 
 ```
 naver-keyword-tool-steamlit/
-├── main.py                   # 통합 메인 실행 파일
-├── config.json               # 애플리케이션 설정 파일
-├── requirements.txt          # 프로젝트 의존성
-├── README.md                 # 프로젝트 설명서
-├── Procfile                  # Heroku 배포용 설정
-├── logs/                     # 로그 파일 저장 디렉토리
-└── src/                      # 모듈화된 소스 코드
-    ├── api/                  # API 통신 관련 모듈
-    │   └── naver_api.py      # 네이버 검색광고 API 클래스
-    ├── data/                 # 데이터 처리 관련 모듈
-    │   └── keyword_processor.py  # 키워드 데이터 처리 클래스
-    ├── ui/                   # 사용자 인터페이스 관련 모듈
-    │   ├── streamlit_app.py  # 기존 Streamlit 웹 애플리케이션
-    │   └── dashboard_app.py  # 메인 대시보드 애플리케이션
-    └── utils/                # 유틸리티 모듈
-        ├── config_manager.py # 설정 관리 클래스
-        ├── common.py         # 공통 유틸리티 함수
-        └── visualization.py  # 데이터 시각화 클래스
+├── 📄 streamlit_app.py          # 🎯 메인 애플리케이션 (유일한 실행 파일)
+├── 📄 requirements.txt          # 의존성 패키지
+├── 📄 README.md                 # 프로젝트 문서
+├── 📄 Procfile                  # Heroku 배포 설정
+├── 📁 .streamlit/
+│   └── secrets.toml             # API 키 (로컬용, Git 제외)
+├── 📁 src/
+│   ├── 📁 api/
+│   │   └── naver_api.py         # 네이버 API 통신
+│   ├── 📁 data/
+│   │   └── keyword_processor.py # 데이터 처리
+│   ├── 📁 ui/
+│   │   └── streamlit_app.py     # 메인 UI (심볼릭 링크)
+│   └── 📁 utils/
+│       ├── config_manager.py    # 설정 관리 (암호화 지원)
+│       ├── common.py            # 공통 유틸리티
+│       └── visualization.py     # 시각화 도구
+└── 📁 logs/                     # 로그 파일
 ```
 
-### 모듈별 책임 분리
+### 🔧 모듈별 역할
 
-- **`api/naver_api.py`**: 네이버 검색광고 API 통신 전담
-- **`data/keyword_processor.py`**: 키워드 데이터 처리 및 분석
-- **`utils/config_manager.py`**: 설정 및 인증 정보 관리
-- **`utils/common.py`**: 공통 유틸리티 함수
-- **`ui/dashboard_app.py`**: PC 16:9 최적화 대시보드
+| 모듈 | 책임 | 주요 기능 |
+|------|------|-----------|
+| `streamlit_app.py` | 메인 애플리케이션 | UI, 사용자 인터랙션, 전체 흐름 제어 |
+| `naver_api.py` | API 통신 | 네이버 검색광고 API 호출, 인증 처리 |
+| `keyword_processor.py` | 데이터 처리 | 키워드 분석, 데이터 변환, 통계 계산 |
+| `config_manager.py` | 설정 관리 | API 키 암호화 저장, 환경변수 처리 |
+| `common.py` | 공통 기능 | 유틸리티 함수, 검증, 포맷팅 |
 
-## 📝 참고사항
+## 🔒 보안 기능
 
-- 처음 실행 시 기본 API 정보가 제공되지만, 실제 사용 시에는 개인 API 키로 변경이 필요합니다.
-- 검색 결과는 최근 30일 기준이며, 네이버 검색광고 API 정책에 따라 변경될 수 있습니다.
-- 모듈화된 코드 구조로 유지보수 및 확장이 용이합니다.
-- v0.0.5부터 shadcn/ui 디자인 시스템이 적용되어 웹 배포에 최적화되었습니다.
+### 다층 보안 구조
+1. **1순위**: Streamlit Cloud Secrets (프로덕션)
+2. **2순위**: 환경변수 (서버 배포)  
+3. **3순위**: 암호화된 로컬 파일 (개발)
 
-## 🎨 UI/UX 특징
+### 보안 특징
+- ✅ **API 키 암호화**: Base64 인코딩으로 로컬 저장
+- ✅ **입력 검증**: XSS/스크립트 공격 방지
+- ✅ **민감 정보 차단**: .gitignore로 완전 보호
+- ✅ **UI 마스킹**: API 키 화면 표시 시 마스킹 처리
 
-- **네이버 브랜드 그린**: `#03C75A` 기반 세련된 그라데이션
-- **2:4:4 레이아웃**: PC 16:9 환경에 최적화된 비율
-- **반응형 디자인**: 다양한 화면 크기 지원
-- **직관적 인터페이스**: 사용자 친화적 대시보드
+## 🎯 사용 방법
+
+### 1. 키워드 입력
+- 분석하고 싶은 메인 키워드 입력
+- 예: "다이어트", "운동", "요리" 등
+
+### 2. API 설정
+- 네이버 검색광고 API 키 입력
+- 또는 Streamlit Secrets에서 자동 로드
+
+### 3. 분석 실행
+- "🚀 키워드 분석 실행" 버튼 클릭
+- 연관 키워드 자동 추출 및 검색량 조회
+
+### 4. 결과 확인
+- **테이블**: 키워드별 상세 데이터
+- **차트**: 상위 키워드 검색량 시각화
+- **다운로드**: Excel 파일로 저장
+
+## 📊 분석 결과 예시
+
+### 키워드: "다이어트"
+| 키워드 | 월간 검색량 | PC | 모바일 | 경쟁정도 |
+|--------|-------------|----|---------|---------| 
+| 다이어트 | 1,234,567 | 456,789 | 777,778 | 높음 |
+| 다이어트 식단 | 987,654 | 321,098 | 666,556 | 중간 |
+| 다이어트 운동 | 765,432 | 234,567 | 530,865 | 중간 |
+
+### 차트 기능
+- 📈 상위 10개 키워드 검색량 바차트
+- 🎨 네이버 브랜드 그린 컬러 적용
+- 🔍 호버 시 상세 정보 표시
+
+## 🚀 배포 옵션
+
+### Streamlit Cloud (권장)
+```bash
+# 1. GitHub에 푸시
+git add .
+git commit -m "Deploy to Streamlit Cloud"
+git push origin main
+
+# 2. Streamlit Cloud에서 배포
+# - Repository: 4tenlab/naver-keyword-tool-steamlit
+# - Main file: streamlit_app.py
+```
+
+### Heroku
+```bash
+# Heroku CLI로 배포
+heroku create naver-keyword-tool
+git push heroku main
+```
+
+### Docker
+```dockerfile
+FROM python:3.9-slim
+COPY . /app
+WORKDIR /app
+RUN pip install -r requirements.txt
+EXPOSE 8501
+CMD ["streamlit", "run", "src/ui/streamlit_app.py"]
+```
+
+## 🔧 개발 환경 설정
+
+### 필수 요구사항
+- **Python**: 3.8 이상
+- **패키지**: requirements.txt 참조
+- **API**: 네이버 검색광고 API 키
+
+### 개발 모드 실행
+```bash
+# 개발 서버 실행 (핫 리로드)
+streamlit run src/ui/streamlit_app.py --server.runOnSave true
+
+# 디버그 모드
+streamlit run src/ui/streamlit_app.py --logger.level debug
+```
+
+## 📝 업데이트 내역
+
+### v0.0.5 (현재)
+- ✅ **단일 파일 구조**: `streamlit_app.py` 하나로 통합
+- ✅ **보안 강화**: API 키 암호화 저장
+- ✅ **UI 개선**: shadcn/ui 디자인 시스템 적용
+- ✅ **성능 최적화**: 모듈화된 구조로 개선
+
+### 이전 버전 대비 개선사항
+- 🔄 **파일 구조 단순화**: 3개 실행 파일 → 1개 통합
+- 🔒 **보안 강화**: 평문 저장 → 암호화 저장
+- 🎨 **디자인 개선**: 기본 UI → 네이버 브랜드 디자인
+- ⚡ **성능 향상**: 중복 코드 제거, 최적화
+
+## 🤝 기여하기
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 라이선스
+
+이 프로젝트는 MIT 라이선스 하에 배포됩니다.
+
+## 📞 지원
+
+- **이메일**: 4tenlab@gmail.com
+- **GitHub Issues**: [문제 신고](https://github.com/4tenlab/naver-keyword-tool-steamlit/issues)
+- **Live Demo**: [https://naver-keyword-tool-4tenlab.streamlit.app/](https://naver-keyword-tool-steamlit-4tenlab.streamlit.app/)
 
 ---
 
-**🚀 Live Demo**: [https://naver-keyword-tool-steamlit-4tenlab.streamlit.app/](https://naver-keyword-tool-steamlit-4tenlab.streamlit.app/)
-
-**📧 문의**: 4tenlab@gmail.com
+**Made with ❤️ by 4tenlab**
